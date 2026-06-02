@@ -1,0 +1,575 @@
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">Impac<span>Soft</span></div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a *ngIf="auth.hasAccess('home')" (click)="setView('home')" class="nav-item"
+                [class.active]="currentView === 'home'">
+                <i class="icon">🏠</i> Inicio
+            </a>
+            <a *ngIf="auth.hasAccess('requests')" (click)="setView('requests')" class="nav-item"
+                [class.active]="currentView === 'requests'">
+                <i class="icon">📋</i> Solicitudes
+            </a>
+
+            <a *ngIf="auth.hasAccess('users')" (click)="setView('users')" class="nav-item"
+                [class.active]="currentView === 'users'">
+                <i class="icon">👥</i> Usuarios
+            </a>
+            <a *ngIf="auth.hasAccess('roles')" (click)="setView('roles')" class="nav-item"
+                [class.active]="currentView === 'roles'">
+                <i class="icon">🛡️</i> Roles
+            </a>
+            <a *ngIf="auth.hasAccess('casos')" (click)="setView('casos')" class="nav-item"
+                [class.active]="currentView === 'casos'">
+                <i class="icon">📁</i> Casos
+            </a>
+            <a *ngIf="auth.hasAccess('clientes')" (click)="setView('clientes')" class="nav-item"
+                [class.active]="currentView === 'clientes'">
+                <i class="icon">👤</i> Clientes
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button (click)="logout()" class="logout-btn">
+                <i class="icon">🚪</i> Cerrar Sesión
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div *ngIf="loading" class="loading">Cargando...</div>
+
+        <!-- VIEW: HOME -->
+        <div *ngIf="!loading && currentView === 'home'" class="content-wrapper">
+            <header class="page-header">
+                <h1>{{ message }}</h1>
+                <p>Aquí tienes un ejemplo de datos traídos desde tu base de datos PostgreSQL.</p>
+            </header>
+
+            <!-- Stats Dashboard (Simple) -->
+            <div class="dashboard-stats" *ngIf="stats">
+                <div class="simple-kpi-grid">
+                    <!-- Requests KPI -->
+                    <div class="kpi-card glass-panel" (click)="setView('requests')">
+                        <div class="kpi-icon">📋</div>
+                        <div class="kpi-info">
+                            <h3>Solicitudes</h3>
+                            <p class="kpi-value">{{ stats.totalSolicitudes }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Cases KPI -->
+                    <div class="kpi-card glass-panel" (click)="setView('casos')">
+                        <div class="kpi-icon">📁</div>
+                        <div class="kpi-info">
+                            <h3>Casos</h3>
+                            <p class="kpi-value">{{ stats.totalCasos }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fallback if no stats yet -->
+            <div class="data-grid" *ngIf="!stats">
+                <div class="card" *ngFor="let item of data">
+                    <div class="card-icon">📦</div>
+                    <h3>{{ item.name }}</h3>
+                    <p class="price">\${{ item.price }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: REQUESTS -->
+        <div *ngIf="!loading && currentView === 'requests'" class="content-wrapper">
+            <header class="page-header">
+                <h1>Solicitudes de Contacto</h1>
+                <p>Gestiona los mensajes recibidos desde la Landing Page.</p>
+            </header>
+
+            <!-- Search Bar -->
+            <div class="toolbar">
+                <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar por nombre, email o empresa..."
+                    class="search-input">
+            </div>
+
+            <!-- Table -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Empresa</th>
+                            <th class="text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let req of filteredRequests">
+                            <td>{{ req.createdAt | date:'shortDate' }}</td>
+                            <td>{{ req.nombre }}</td>
+                            <td>{{ req.email }}</td>
+                            <td>{{ req.telefono }}</td>
+                            <td>{{ req.empresa || '-' }}</td>
+                            <td class="text-right">
+                                <button class="btn-icon btn-view" (click)="openModal(req)" title="Ver Detalle">
+                                    👁️
+                                </button>
+                                <button class="btn-icon btn-delete" (click)="deleteRequest(req.id)" title="Eliminar">
+                                    🗑️
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="filteredRequests.length === 0">
+                            <td colspan="6" class="no-data">No se encontraron solicitudes.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: USERS -->
+        <div *ngIf="!loading && currentView === 'users'" class="content-wrapper">
+            <header class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Gestión de Usuarios</h1>
+                    <p>Crea y administra los usuarios del sistema.</p>
+                </div>
+                <button class="btn-primary" (click)="openUserModal()">
+                    + Crear Nuevo Usuario
+                </button>
+            </header>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Rol</th>
+                            <th>Fecha Creación</th>
+                            <th class="text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let u of users">
+                            <td>{{ u.id }}</td>
+                            <td>{{ u.username }}</td>
+                            <td>{{ u.role }}</td>
+                            <td>{{ u.createdAt | date:'shortDate' }}</td>
+                            <td class="text-right">
+                                <button class="btn-icon btn-delete" (click)="deleteUser(u.id)" title="Eliminar">
+                                    🗑️
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: ROLES -->
+        <div *ngIf="!loading && currentView === 'roles'" class="content-wrapper">
+            <header class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Gestión de Roles</h1>
+                    <p>Define roles y permisos de acceso.</p>
+                </div>
+                <button class="btn-primary" (click)="openRoleModal()">
+                    + Crear Nuevo Rol
+                </button>
+            </header>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Módulos Permitidos</th>
+                            <th class="text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let r of roles">
+                            <td>{{ r.name }}</td>
+                            <td>{{ r.modules.join(', ') }}</td>
+                            <td class="text-right">
+                                <button *ngIf="r.name !== 'administrador'" class="btn-icon btn-delete"
+                                    (click)="deleteRole(r.name)" title="Eliminar">
+                                    🗑️
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: CASOS -->
+        <div *ngIf="!loading && currentView === 'casos'" class="content-wrapper">
+            <header class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Gestión de Casos</h1>
+                    <p>Casos creados a partir de solicitudes.</p>
+                </div>
+                <button class="btn-primary" (click)="openCasoModal()">
+                    + Crear Nuevo Caso
+                </button>
+            </header>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Nombre</th>
+                            <th>Empresa</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let c of cases">
+                            <td>{{ c.id }}</td>
+                            <td>{{ c.Cliente?.nombre || '-' }}</td>
+                            <td>{{ c.nombre }}</td>
+                            <td>{{ c.empresa || '-' }}</td>
+                            <td>
+                                <span class="badge-role" [class.admin]="c.status === 'Abierto'"
+                                    [class.client]="c.status !== 'Abierto'">
+                                    {{ c.status }}
+                                </span>
+                            </td>
+                            <td>{{ c.createdAt | date:'shortDate' }}</td>
+                            <td>
+                                <a [routerLink]="['/casos', c.id]" class="btn-icon btn-view" title="Ver Detalle">
+                                    👁️
+                                </a>
+                            </td>
+                        </tr>
+                        <tr *ngIf="cases.length === 0">
+                            <td colspan="7" class="no-data">No hay casos registrados.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: CLIENTES -->
+        <div *ngIf="!loading && currentView === 'clientes'" class="content-wrapper">
+            <header class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Gestión de Clientes</h1>
+                    <p>Base de datos de clientes y empresas.</p>
+                </div>
+                <button class="btn-primary" (click)="openClienteModal()">
+                    + Crear Nuevo Cliente
+                </button>
+            </header>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Ciudad</th>
+                            <th>Contacto</th>
+                            <th class="text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let cliente of clientes">
+                            <td>{{ cliente.id }}</td>
+                            <td>{{ cliente.nombre }}</td>
+                            <td>{{ cliente.email }}</td>
+                            <td>{{ cliente.telefono || '-' }}</td>
+                            <td>{{ cliente.ciudad || '-' }}</td>
+                            <td>{{ cliente.contactoPrincipal || '-' }}</td>
+                            <td class="text-right">
+                                <button class="btn-icon btn-view" (click)="openClienteModal(cliente)" title="Editar">
+                                    ✏️
+                                </button>
+                                <button class="btn-icon btn-delete" (click)="deleteCliente(cliente.id)"
+                                    title="Eliminar">
+                                    🗑️
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="clientes.length === 0">
+                            <td colspan="7" class="no-data">No hay clientes registrados.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MODAL OVERLAY -->
+        <div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+            <div class="modal-content" (click)="$event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>Detalle de Solicitud</h2>
+                    <button class="close-btn" (click)="closeModal()">×</button>
+                </div>
+                <div class="modal-body" *ngIf="selectedRequest">
+                    <div class="detail-row">
+                        <label>Fecha:</label>
+                        <span>{{ selectedRequest.createdAt | date:'medium' }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Nombre:</label>
+                        <span>{{ selectedRequest.nombre }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Email:</label>
+                        <span>{{ selectedRequest.email }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Teléfono:</label>
+                        <span>{{ selectedRequest.telefono }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Empresa:</label>
+                        <span>{{ selectedRequest.empresa || 'N/A' }}</span>
+                    </div>
+                    <div class="detail-row full-width">
+                        <label>Mensaje:</label>
+                        <p class="message-box">{{ selectedRequest.mensaje }}</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" (click)="closeModal()">Cerrar</button>
+                    <button class="btn-primary" (click)="createCasoFromRequest(selectedRequest)">Crear Caso</button>
+                    <button class="btn-danger" (click)="deleteRequest(selectedRequest.id)">Borrar Solicitud</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL ROLE -->
+        <div class="modal-overlay" *ngIf="isRoleModalOpen" (click)="closeRoleModal()">
+            <div class="modal-content" (click)="$event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>Crear Nuevo Rol</h2>
+                    <button class="close-btn" (click)="closeRoleModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="detail-row full-width">
+                        <label>Nombre del Rol</label>
+                        <input type="text" [(ngModel)]="newRole.name" placeholder="Ej. Ventas, Soporte..."
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row full-width">
+                        <label>Permisos de Acceso</label>
+                        <div class="modules-grid">
+                            <label *ngFor="let m of availableModules" class="checkbox-wrapper">
+                                <input type="checkbox" (change)="toggleModule(m)"
+                                    [checked]="newRole.modules.includes(m)">
+                                <span class="custom-checkbox"></span>
+                                <span class="label-text">{{ m | titlecase }}</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" (click)="closeRoleModal()">Cancelar</button>
+                    <button class="btn-primary" (click)="createRole()">Guardar Rol</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL USER -->
+        <div class="modal-overlay" *ngIf="isUserModalOpen" (click)="closeUserModal()">
+            <div class="modal-content" (click)="$event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>Crear Nuevo Usuario</h2>
+                    <button class="close-btn" (click)="closeUserModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="detail-row full-width">
+                        <label>Nombre de Usuario</label>
+                        <input type="text" [(ngModel)]="newUser.username" placeholder="Ej. jperez"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row full-width">
+                        <label>Contraseña</label>
+                        <input type="password" [(ngModel)]="newUser.password" placeholder="******"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row full-width">
+                        <label>Asignar Rol</label>
+                        <select [(ngModel)]="newUser.role" class="form-input-modal">
+                            <option value="" disabled selected>Selecciona un rol...</option>
+                            <option *ngFor="let r of roles" [value]="r.name">{{ r.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" (click)="closeUserModal()">Cancelar</button>
+                    <button class="btn-primary" (click)="createUser()">Guardar Usuario</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL CASO (Create New Case) -->
+        <div class="modal-overlay" *ngIf="isCasoModalOpen" (click)="closeCasoModal()">
+            <div class="modal-content" (click)="$event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>Crear Nuevo Caso</h2>
+                    <button class="close-btn" (click)="closeCasoModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="detail-row">
+                        <label>Cliente (Opcional)</label>
+                        <select [(ngModel)]="newCaso.clienteId" class="form-input-modal">
+                            <option [value]="null">-- Sin cliente --</option>
+                            <option *ngFor="let cliente of clientes" [value]="cliente.id">
+                                {{ cliente.nombre }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="detail-row">
+                        <label>Nombre del Cliente</label>
+                        <input type="text" [(ngModel)]="newCaso.nombre" placeholder="Nombre completo"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row">
+                        <label>Email</label>
+                        <input type="email" [(ngModel)]="newCaso.email" placeholder="correo@ejemplo.com"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row">
+                        <label>Teléfono</label>
+                        <input type="tel" [(ngModel)]="newCaso.telefono" placeholder="+57 300 123 4567"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row">
+                        <label>Empresa (Opcional)</label>
+                        <input type="text" [(ngModel)]="newCaso.empresa" placeholder="Nombre de la empresa"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row full-width">
+                        <label>Descripción del Caso</label>
+                        <textarea [(ngModel)]="newCaso.mensaje" placeholder="Describe el caso..."
+                            class="form-input-modal" rows="4"></textarea>
+                    </div>
+
+                    <div class="detail-row full-width">
+                        <label>Estado Inicial</label>
+                        <select [(ngModel)]="newCaso.status" class="form-input-modal">
+                            <option value="Abierto">Abierto</option>
+                            <option value="En Progreso">En Progreso</option>
+                            <option value="Cerrado">Cerrado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" (click)="closeCasoModal()">Cancelar</button>
+                    <button class="btn-primary" (click)="createDirectCaso()">Crear Caso</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL CLIENTE (Create/Edit Client) -->
+        <div class="modal-overlay" *ngIf="isClienteModalOpen" (click)="closeClienteModal()">
+            <div class="modal-content" (click)="$event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>{{ editingCliente ? 'Editar Cliente' : 'Crear Nuevo Cliente' }}</h2>
+                    <button class="close-btn" (click)="closeClienteModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="detail-row">
+                        <label>Nombre / Razón Social *</label>
+                        <input type="text" [(ngModel)]="newCliente.nombre" placeholder="Nombre del cliente"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row">
+                        <label>NIT / Documento</label>
+                        <input type="text" [(ngModel)]="newCliente.nit" placeholder="123456789-0"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row">
+                        <label>Email *</label>
+                        <input type="email" [(ngModel)]="newCliente.email" placeholder="contacto@empresa.com"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row">
+                        <label>Teléfono</label>
+                        <input type="tel" [(ngModel)]="newCliente.telefono" placeholder="+57 300 123 4567"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row full-width">
+                        <label>Dirección</label>
+                        <input type="text" [(ngModel)]="newCliente.direccion" placeholder="Calle 123 #45-67"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row">
+                        <label>Ciudad</label>
+                        <input type="text" [(ngModel)]="newCliente.ciudad" placeholder="Bogotá"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row">
+                        <label>País</label>
+                        <input type="text" [(ngModel)]="newCliente.pais" placeholder="Colombia"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row">
+                        <label>Contacto Principal</label>
+                        <input type="text" [(ngModel)]="newCliente.contactoPrincipal" placeholder="Juan Pérez"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row">
+                        <label>Cargo del Contacto</label>
+                        <input type="text" [(ngModel)]="newCliente.cargoContacto" placeholder="Gerente General"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row full-width">
+                        <label>Sitio Web</label>
+                        <input type="url" [(ngModel)]="newCliente.sitioWeb" placeholder="https://www.ejemplo.com"
+                            class="form-input-modal">
+                    </div>
+
+                    <div class="detail-row full-width">
+                        <label>Notas</label>
+                        <textarea [(ngModel)]="newCliente.notas" placeholder="Información adicional..."
+                            class="form-input-modal" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" (click)="closeClienteModal()">Cancelar</button>
+                    <button class="btn-primary" (click)="saveCliente()">
+                        {{ editingCliente ? 'Actualizar' : 'Crear' }} Cliente
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: DASHBOARD (WIP) -->
+
+
+    </main>
+</div>

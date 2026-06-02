@@ -1,0 +1,13 @@
+<div class="notification-overlay">
+    <div class="notification-card" [ngClass]="type">
+        <div class="icon-wrapper">
+            <span class="icon" *ngIf="type === 'success'">✅</span>
+            <span class="icon" *ngIf="type === 'error'">⚠️</span>
+        </div>
+        <div class="content">
+            <h3>{{ title }}</h3>
+            <p>{{ message }}</p>
+        </div>
+        <button (click)="onClose()">Aceptar</button>
+    </div>
+</div>

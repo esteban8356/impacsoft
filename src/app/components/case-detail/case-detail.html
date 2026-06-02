@@ -1,0 +1,225 @@
+<div class="case-detail-container">
+    <header class="detail-header">
+        <button class="back-btn" (click)="goBack()">
+            ⬅ Volver
+        </button>
+        <h1>Detalle del Caso #{{ caso?.id }}</h1>
+        <div class="header-actions">
+            <!-- New Status Selector -->
+            <select class="status-select" [(ngModel)]="caso.status" (change)="updateCaso()">
+                <option value="Abierto">Abierto</option>
+                <option value="En Proceso">En Proceso</option>
+                <option value="Cerrado">Cerrado</option>
+            </select>
+            <span class="status-indicator" [class]="caso?.status"></span>
+        </div>
+    </header>
+
+    <div *ngIf="loading" class="loading">Cargando detalles...</div>
+
+    <div *ngIf="!loading && caso" class="detail-content">
+
+        <!-- Info Card -->
+        <div class="card info-card">
+            <div class="row">
+                <div class="col">
+                    <label>Cliente</label>
+                    <div class="value">{{ caso.nombre }}</div>
+                </div>
+                <div class="col">
+                    <label>Empresa</label>
+                    <div class="value">{{ caso.empresa || '-' }}</div>
+                </div>
+                <div class="col">
+                    <label>Email</label>
+                    <div class="value">{{ caso.email }}</div>
+                </div>
+            </div>
+            <div class="row editable-row">
+                <div class="col">
+                    <label>Fecha Inicio</label>
+                    <input type="date" [(ngModel)]="caso.fecha_inicio_proyecto">
+                </div>
+                <div class="col">
+                    <label>Fecha Estimada Fin</label>
+                    <input type="date" [(ngModel)]="caso.fecha_estimada_finalizacion">
+                </div>
+                <div class="col action-col">
+                    <button class="btn-save" (click)="updateCaso()">Guardar Fechas</button>
+                </div>
+            </div>
+            <div class="row description-row">
+                <label>Descripción Inicial</label>
+                <div class="value description">{{ caso.mensaje }}</div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button [class.active]="activeTab === 'details'" (click)="activeTab = 'details'">Comentarios y
+                Avances</button>
+            <button [class.active]="activeTab === 'actividades'" (click)="activeTab = 'actividades'">Actividades
+                (Kanban)</button>
+            <button [class.active]="activeTab === 'tests'" (click)="activeTab = 'tests'">Tests Realizados</button>
+        </div>
+
+        <!-- TAB: COMMENTS -->
+        <div *ngIf="activeTab === 'details'" class="tab-content">
+
+            <div class="comments-section">
+                <h3>Comentarios</h3>
+
+                <div class="new-comment-box">
+                    <textarea [(ngModel)]="newComment.contenido" placeholder="Escribe un comentario..."></textarea>
+                    <input type="text" [(ngModel)]="newComment.adjuntos" placeholder="URL de adjunto (opcional)">
+                    <button class="btn-primary" (click)="addComment()">Enviar Comentario</button>
+                </div>
+
+                <div class="comments-list">
+                    <div class="comment-item" *ngFor="let comment of comments">
+                        <div class="comment-header">
+                            <span class="author">{{ comment.autor }}</span>
+                            <span class="date">{{ comment.createdAt | date:'medium' }}</span>
+                        </div>
+                        <div class="comment-body">
+                            {{ comment.contenido }}
+                        </div>
+                        <div class="comment-attachments" *ngIf="comment.adjuntos">
+                            📎 <a [href]="comment.adjuntos" target="_blank">Ver Adjunto</a>
+                        </div>
+                    </div>
+                    <div *ngIf="comments.length === 0" class="no-data">No hay comentarios aún.</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TAB: KANBAN ACTIVIDADES -->
+        <div *ngIf="activeTab === 'actividades'" class="tab-content">
+            <div class="kanban-section">
+
+                <!-- New Activity Form -->
+                <div class="new-activity-form">
+                    <input type="text" [(ngModel)]="newActividad.titulo" placeholder="Título de la actividad">
+                    <input type="text" [(ngModel)]="newActividad.descripcion" placeholder="Descripción (opcional)">
+                    <button class="btn-primary" (click)="addActividad()">+ Nueva Actividad</button>
+                </div>
+
+                <!-- BOARD -->
+                <div class="kanban-board">
+                    <!-- COLUMN: PROGRAMADAS -->
+                    <div class="kanban-column">
+                        <div class="column-header programada">
+                            <h3>Programadas</h3>
+                            <span class="count">{{ programadas.length }}</span>
+                        </div>
+                        <div class="column-body">
+                            <div class="kanban-card" *ngFor="let act of programadas">
+                                <h4>{{ act.titulo }}</h4>
+                                <p>{{ act.descripcion }}</p>
+                                <div class="card-actions">
+                                    <button class="btn-link" (click)="deleteActividad(act.id)">🗑️</button>
+                                    <button class="btn-move" (click)="moveActividad(act, 'Hecha')">➡ Hecha</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COLUMN: HECHAS -->
+                    <div class="kanban-column">
+                        <div class="column-header hecha">
+                            <h3>Hechas</h3>
+                            <span class="count">{{ hechas.length }}</span>
+                        </div>
+                        <div class="column-body">
+                            <div class="kanban-card" *ngFor="let act of hechas">
+                                <h4>{{ act.titulo }}</h4>
+                                <p>{{ act.descripcion }}</p>
+                                <div class="card-actions">
+                                    <button class="btn-move" (click)="moveActividad(act, 'Programada')">⬅ Prog</button>
+                                    <button class="btn-link" (click)="deleteActividad(act.id)">🗑️</button>
+                                    <button class="btn-move" (click)="moveActividad(act, 'Finalizada')">➡ Fin</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COLUMN: FINALIZADAS -->
+                    <div class="kanban-column">
+                        <div class="column-header finalizada">
+                            <h3>Finalizadas</h3>
+                            <span class="count">{{ finalizadas.length }}</span>
+                        </div>
+                        <div class="column-body">
+                            <div class="kanban-card" *ngFor="let act of finalizadas">
+                                <h4>{{ act.titulo }}</h4>
+                                <p>{{ act.descripcion }}</p>
+                                <div class="card-actions">
+                                    <button class="btn-move" (click)="moveActividad(act, 'Hecha')">⬅ Hecha</button>
+                                    <button class="btn-link" (click)="deleteActividad(act.id)">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB: TESTS -->
+        <div *ngIf="activeTab === 'tests'" class="tab-content">
+
+            <div class="tests-section">
+                <h3>Tests Realizados</h3>
+
+                <div class="new-test-form-grid">
+                    <div class="form-group">
+                        <label>Nombre del Test</label>
+                        <input type="text" [(ngModel)]="newTest.nombre" placeholder="Ej. Prueba de Carga">
+                    </div>
+                    <div class="form-group">
+                        <label>Resultado</label>
+                        <input type="text" [(ngModel)]="newTest.resultado" placeholder="Ej. Aprobado / Fallido">
+                    </div>
+                    <div class="form-group">
+                        <label>Adjunto (URL)</label>
+                        <input type="text" [(ngModel)]="newTest.adjuntos" placeholder="https://...">
+                    </div>
+                    <div class="form-action">
+                        <button class="btn-primary" (click)="addTest()">Agregar Test</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Test</th>
+                                <th>Resultado</th>
+                                <th>Adjunto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let test of tests">
+                                <td>{{ test.createdAt | date:'short' }}</td>
+                                <td>{{ test.nombre }}</td>
+                                <td>{{ test.resultado }}</td>
+                                <td>
+                                    <a *ngIf="test.adjuntos" [href]="test.adjuntos" target="_blank"
+                                        class="attachment-link">Ver Archivo 📎</a>
+                                    <span *ngIf="!test.adjuntos" class="no-attach">-</span>
+                                </td>
+                            </tr>
+                            <tr *ngIf="tests.length === 0">
+                                <td colspan="4" class="no-data">No se han registrado tests.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>

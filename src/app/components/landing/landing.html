@@ -1,0 +1,279 @@
+<header>
+    <div class="wrapper header-inner">
+        <div class="brand-small">
+            <!-- Mini logo reutilizando tu marca -->
+            <div class="hat-style" style="width:40px;height:22px;border-width:4px;box-shadow:none;margin-bottom:0;">
+            </div>
+            <div>
+                <div class="brand-name">IMPACSOFT</div>
+                <div class="brand-tagline">Software de alto impacto</div>
+            </div>
+        </div>
+        <nav>
+            <a href="#inicio">Inicio</a>
+            <a href="#servicios">Servicios</a>
+            <a href="#filosofia">Filosofía</a>
+            <a href="#contacto">Contacto</a>
+            <a routerLink="/login" class="btn-login-header">ZONA CLIENTES</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrapper hero-inner">
+            <!-- Izquierda: logo + texto -->
+            <div class="hero-left">
+                <div class="hero-logo-block">
+                    <!-- LOGO EXACTO QUE ME PASASTE -->
+                    <div class="logo-container">
+                        <div class="hat-style"></div>
+                        <div class="logo-text">
+                            Impac<span>Soft</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h1 class="hero-title">
+                    Creamos <span>software de alto impacto</span><br>
+                    para ideas y negocios que quieren crecer.
+                </h1>
+
+                <p class="hero-subtitle">
+                    En <strong>ImpacSoft</strong> combinamos análisis, diseño y desarrollo
+                    para construir soluciones a medida: claras, eficientes y pensadas para
+                    generar resultados reales, no solo líneas de código.
+                </p>
+
+                <div class="hero-badges">
+                    <div class="badge">Foco en <strong>resultados</strong>, no solo tecnología</div>
+                    <div class="badge">Soluciones a medida para tu contexto</div>
+                </div>
+
+                <div class="hero-actions">
+                    <a href="#contacto" class="btn-primary">Contáctenos</a>
+                    <a href="#servicios" class="btn-ghost">Ver Servicios</a>
+                </div>
+            </div>
+
+            <!-- Derecha: Programador Interactivo -->
+            <!-- Derecha: Programador Interactivo (SVG) -->
+            <!-- Derecha: Programador Interactivo (SVG) -->
+            <div class="hero-interactive">
+                <app-programmer-desk></app-programmer-desk>
+            </div>
+        </div>
+    </section>
+
+    <!-- FILOSOFÍA / VALORES -->
+    <section id="filosofia">
+        <div class="wrapper">
+            <h2 class="section-title">Nuestra <span>Filosofía</span></h2>
+            <p class="section-subtitle">
+                No somos una fábrica de código. Somos consultores tecnológicos que entienden tu negocio.
+            </p>
+
+            <div class="philosophy-grid">
+                <article class="philosophy-card">
+                    <div class="card-icon">
+                        <ng-lottie [options]="rocketOptions" height="120px" width="120px"></ng-lottie>
+                    </div>
+                    <h3>Impacto Real</h3>
+                    <p>
+                        Nos enfocamos en métricas que importan. Si el software no ayuda a vender más,
+                        ahorrar tiempo o mejorar la experiencia de tus clientes, no sirve.
+                    </p>
+                </article>
+
+                <article class="philosophy-card">
+                    <div class="card-icon">
+                        <ng-lottie [options]="glassOptions" height="120px" width="120px"></ng-lottie>
+                    </div>
+                    <h3>Transparencia Radical</h3>
+                    <p>
+                        Sin tecnicismos confusos ni costos ocultos. Te mantenemos informado en cada
+                        etapa con un lenguaje claro y honesto sobre lo que se puede y no se puede hacer.
+                    </p>
+                </article>
+
+                <article class="philosophy-card">
+                    <div class="card-icon">
+                        <ng-lottie [options]="diamondOptions" height="120px" width="120px"></ng-lottie>
+                    </div>
+                    <h3>Calidad Escalable</h3>
+                    <p>
+                        Construimos pensando en el futuro. Tu producto estará listo para crecer contigo,
+                        con código limpio, seguro y fácil de mantener a largo plazo.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section id="servicios" class="services-section">
+        <div class="wrapper">
+            <h2 class="section-title">Nuestros <span>Servicios</span></h2>
+            <p class="section-subtitle">
+                Transformamos tu negocio con tecnología a medida, desde la automatización de procesos hasta experiencias
+                web únicas.
+            </p>
+
+            <div class="services-grid">
+                <!-- Servicio: Desarrollo Web -->
+                <div class="service-card web-dev-card">
+                    <div class="service-content">
+                        <h3>Desarrollo Web Personalizado</h3>
+                        <p>
+                            Creamos sitios y aplicaciones web que no solo se ven bien, sino que funcionan
+                            perfectamente. Diseño único, veloz y optimizado para convertir visitantes en clientes.
+                        </p>
+                        <ul class="service-list">
+                            <li>Diseño UI/UX a medida</li>
+                            <li>Webs corporativas y Landing Pages</li>
+                            <li>Aplicaciones Web Progresivas (PWA)</li>
+                        </ul>
+                    </div>
+                    <!-- Animación: Website Builder -->
+                    <div class="service-visual">
+                        <div class="browser-mockup">
+                            <div class="browser-header">
+                                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                            </div>
+                            <div class="browser-body">
+                                <div class="cursor-pointer"></div>
+                                <div class="layout-placeholder header-ph"></div>
+                                <div class="layout-placeholder hero-ph"></div>
+                                <div class="layout-row">
+                                    <div class="layout-placeholder card-ph"></div>
+                                    <div class="layout-placeholder card-ph"></div>
+                                    <div class="layout-placeholder card-ph"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Servicio: Automatización -->
+                <div class="service-card automation-card">
+                    <div class="service-visual">
+                        <!-- Visual abstracto de conexión/automatización -->
+                        <div class="automation-visual">
+                            <div class="node node-1">
+                                <i class="icon-mail">✉️</i>
+                            </div>
+                            <div class="connection-line"></div>
+                            <div class="node node-2">
+                                <i class="icon-gear">⚙️</i>
+                            </div>
+                            <div class="connection-line"></div>
+                            <div class="node node-3">
+                                <i class="icon-check">✅</i>
+                            </div>
+                            <div class="activity-pulse"></div>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3>Automatizaciones Inteligentes</h3>
+                        <p>
+                            Olvídate de las tareas repetitivas. Conectamos tus herramientas favoritas para
+                            crear flujos de trabajo que ahorran tiempo y reducen errores humanos.
+                        </p>
+                        <ul class="service-list">
+                            <li>Integración de CRMs y Email Marketing</li>
+                            <li>Chatbots y Asistentes Virtuales</li>
+                            <li>Reportes automáticos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto">
+        <div class="wrapper">
+            <h2 class="section-title">Contác<span>tenos</span></h2>
+            <p class="section-subtitle">
+                Cuéntanos brevemente qué tienes en mente: una idea nueva, un proceso que quieres mejorar
+                o un proyecto que necesita un impulso tecnológico.
+            </p>
+
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <p>
+                        En ImpacSoft preferimos una conversación clara a promesas exageradas.
+                        Te escuchamos, analizamos tu contexto y te proponemos caminos realistas
+                        según tu momento y tus recursos.
+                    </p>
+                    <p>
+                        Puedes usar este formulario como primer paso. Más adelante podrás conectar
+                        este mismo formulario con tu propio frontend o servicio de correo.
+                    </p>
+                </div>
+
+                <div class="contact-card">
+                    <form (ngSubmit)="onSubmit()">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <input id="nombre" name="nombre" [(ngModel)]="contactForm.nombre" type="text"
+                                        placeholder=" " required>
+                                    <label for="nombre">Nombre</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <input id="email" name="email" [(ngModel)]="contactForm.email" type="email"
+                                        placeholder=" " required>
+                                    <label for="email">Email</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <input id="telefono" name="telefono" [(ngModel)]="contactForm.telefono" type="tel"
+                                    placeholder=" " required>
+                                <label for="telefono">Teléfono</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <input id="empresa" name="empresa" [(ngModel)]="contactForm.empresa" type="text"
+                                    placeholder=" " required>
+                                <label for="empresa">Empresa</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <textarea id="mensaje" name="mensaje" [(ngModel)]="contactForm.mensaje" placeholder=" "
+                                    required></textarea>
+                                <label for="mensaje">¿En qué podemos ayudarte?</label>
+                            </div>
+                        </div>
+
+                        <div class="form-footer">
+                            <button type="submit" class="btn-primary btn-block">
+                                Enviar mensaje
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="wrapper">
+        © <span id="year">{{ currentYear }}</span> ImpacSoft · Software de alto impacto.
+    </div>
+</footer>
+
+<app-notification *ngIf="showNotification" [title]="notificationTitle" [message]="notificationMessage"
+    [type]="notificationType" (close)="closeNotification()">
+</app-notification>

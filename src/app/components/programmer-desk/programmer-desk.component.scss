@@ -1,0 +1,119 @@
+:host {
+    display: block;
+    width: 100%;
+    /* Variables from the provided snippet */
+    --orange: #FF6600;
+    --orange-dark: #e85a00;
+    --text-soft: #bbbbbb;
+    --border-soft: #262626;
+}
+
+.hero-code {
+    background: #050505;
+    border-radius: 18px;
+    border: 1px solid var(--border-soft);
+    padding: 1.1rem 1.2rem;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    width: 100%;
+    /* Ensure it takes available width */
+    max-width: 600px;
+    /* Or whatever fits best */
+    margin: 0 auto;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    font-size: 0.8rem;
+    color: var(--text-soft);
+}
+
+.panel-dots {
+    display: inline-flex;
+    gap: 0.3rem;
+}
+
+.panel-dots span {
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: #333;
+}
+
+.panel-dots span:nth-child(1) {
+    background: #ff5f57;
+}
+
+.panel-dots span:nth-child(2) {
+    background: #febc2e;
+}
+
+.panel-dots span:nth-child(3) {
+    background: #28c840;
+}
+
+.panel-filename {
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+    padding: 0.15rem 0.7rem;
+    font-size: 0.72rem;
+}
+
+.code-box {
+    background: #000000;
+    border-radius: 14px;
+    border: 1px solid var(--border-soft);
+    padding: 0.9rem;
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 0.78rem;
+    min-height: 160px;
+    color: #e5e5e5;
+}
+
+/* Dynamically created elements need ::ng-deep because they are added via innerHTML or ViewEncapsulation.None */
+::ng-deep .code-line {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 0.2rem;
+
+    span:first-child {
+        min-width: 18px;
+        color: #555555;
+        text-align: right;
+        user-select: none;
+    }
+}
+
+::ng-deep .code-keyword {
+    color: #ffb86c;
+}
+
+::ng-deep .code-func {
+    color: #8be9fd;
+}
+
+::ng-deep .code-string {
+    color: #50fa7b;
+}
+
+::ng-deep .code-comment {
+    color: #6272a4;
+    font-style: italic;
+}
+
+::ng-deep .code-cursor {
+    width: 7px;
+    height: 1rem;
+    background: #ffffff;
+    border-radius: 3px;
+    animation: blink 1s steps(2, start) infinite;
+    display: inline-block;
+}
+
+@keyframes blink {
+    to {
+        opacity: 0;
+    }
+}

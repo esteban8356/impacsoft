@@ -1,0 +1,10 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Transparent background (removed black rect) -->
+  
+  <!-- Orange Arc (Hat) -->
+  <!-- Center 32,32. Radius ~20. -->
+  <path d="M 12 40 A 20 20 0 0 1 52 40" stroke="#FF6600" stroke-width="6" fill="none" stroke-linecap="round"/>
+  
+  <!-- White Dash -->
+  <rect x="26" y="24" width="12" height="4" fill="#FFFFFF"/>
+</svg>
