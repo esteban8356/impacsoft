@@ -18,6 +18,11 @@ import { ProgrammerDeskComponent } from '../programmer-desk/programmer-desk.comp
 export class LandingComponent implements AfterViewInit, OnDestroy {
   @ViewChild('codeBox') codeBoxRef?: ElementRef;
   currentYear = new Date().getFullYear();
+  isMenuOpen = false;
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 
   // Lottie Animation Options
   rocketOptions: AnimationOptions = {

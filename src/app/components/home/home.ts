@@ -29,6 +29,11 @@ export class HomeComponent implements OnInit {
   currentView: string = 'home';
   searchTerm: string = '';
   loading = true;
+  isSidebarOpen = false;
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
 
   // Forms
   newUser = { username: '', password: '', role: '' };
@@ -144,6 +149,7 @@ export class HomeComponent implements OnInit {
       return;
     }
     this.currentView = view;
+    this.isSidebarOpen = false;
     if (view === 'requests') {
       this.fetchRequests();
     } else if (view === 'users') {
@@ -443,6 +449,7 @@ export class HomeComponent implements OnInit {
   }
 
   logout() {
+    this.isSidebarOpen = false;
     this.auth.logout();
   }
 

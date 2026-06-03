@@ -551,3 +551,117 @@ $border-color: #333333;
         }
     }
 }
+
+@media (max-width: 768px) {
+    .case-detail-container {
+        padding: 12px;
+    }
+
+    .detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 10px 0;
+
+        h1 {
+            font-size: 1.4rem;
+        }
+
+        .header-actions {
+            width: 100%;
+            justify-content: space-between;
+
+            .status-select {
+                width: 100%;
+                text-align-last: center;
+            }
+        }
+    }
+
+    .card {
+        padding: 15px;
+        margin-bottom: 20px;
+
+        .row {
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 15px;
+
+            .col {
+                width: 100%;
+
+                input {
+                    padding: 10px;
+                }
+            }
+        }
+
+        .editable-row {
+            padding: 15px;
+            margin-top: 15px;
+            gap: 15px;
+
+            .action-col {
+                margin-top: 5px;
+                
+                button {
+                    width: 100%;
+                    padding: 10px;
+                }
+            }
+        }
+    }
+
+    .tabs {
+        flex-wrap: wrap;
+        
+        button {
+            flex: 1 1 auto;
+            text-align: center;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+        }
+    }
+
+    .tab-content {
+        padding: 15px;
+        min-height: auto;
+    }
+
+    .new-comment-box {
+        gap: 10px;
+    }
+
+    .kanban-section {
+        .new-activity-form {
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+
+            input {
+                width: 100%;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+
+    .tests-section {
+        h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .new-test-form-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+            padding: 15px;
+
+            .form-action button {
+                width: 100%;
+            }
+        }
+    }
+}

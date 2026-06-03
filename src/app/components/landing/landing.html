@@ -9,14 +9,20 @@
                 <div class="brand-tagline">Software de alto impacto</div>
             </div>
         </div>
-        <nav>
-            <a href="#inicio">Inicio</a>
-            <a href="#servicios">Servicios</a>
-            <a href="#filosofia">Filosofía</a>
-            <a href="#contacto">Contacto</a>
-            <a routerLink="/login" class="btn-login-header">ZONA CLIENTES</a>
+        <nav [class.open]="isMenuOpen">
+            <a href="#inicio" (click)="isMenuOpen = false">Inicio</a>
+            <a href="#servicios" (click)="isMenuOpen = false">Servicios</a>
+            <a href="#filosofia" (click)="isMenuOpen = false">Filosofía</a>
+            <a href="#contacto" (click)="isMenuOpen = false">Contacto</a>
+            <a routerLink="/login" class="btn-login-header" (click)="isMenuOpen = false">ZONA CLIENTES</a>
         </nav>
+        <button class="menu-toggle" [class.open]="isMenuOpen" (click)="toggleMenu()" aria-label="Abrir menú">
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+        </button>
     </div>
+    <div class="menu-overlay" *ngIf="isMenuOpen" (click)="toggleMenu()"></div>
 </header>
 
 <main>

@@ -2,8 +2,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #000000;
+    padding: 1.5rem;
 }
 
 .login-card {
@@ -142,5 +143,19 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 1.5rem;
+
+        .logo-text {
+            font-size: 28px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
     }
 }
